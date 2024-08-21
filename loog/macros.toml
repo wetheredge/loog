@@ -1,0 +1,99 @@
+[[dbg]]
+defmt = true
+"" = "$crate::defmt::dbg!()"
+"$($val:expr),+" = "$crate::defmt::dbg!($($val),+)"
+
+[[dbg]]
+defmt = false
+std = true
+"" = "$crate::private::dbg!()"
+"$($val:expr),+" = "$crate::private::dbg!($($val),+)"
+
+[[dbg]]
+defmt = false
+std = false
+"" = "()"
+"$val:expr" = "$val"
+"$($val:expr),+" = "($($val),+)"
+
+
+[["{debug_,}assert"]]
+defmt = true
+"$cond:expr" = "$crate::defmt::{debug_,}assert!($cond)"
+"$cond:expr, $($arg:tt)+" = "$crate::translate!(defmt, $crate::defmt::{debug_,}assert, [$cond], $($arg)+)"
+
+[["{debug_,}assert"]]
+defmt = false
+"$cond:expr" = "$crate::private::{debug_,}assert!($cond)"
+"$cond:expr, $($arg:tt)+" = "$crate::translate!(std, $crate::private::{debug_,}assert, [$cond], $($arg)+)"
+
+
+[["{debug_,}assert_{eq,ne}"]]
+defmt = true
+"$left:expr, $right:expr" = "$crate::defmt::{debug_,}assert_{eq,ne}!($left, $right)"
+"$left:expr, $right:expr, $($arg:tt)+" = "$crate::translate!(defmt, $crate::defmt::{debug_,}assert_{eq,ne}, [$left, $right], $($arg)*)"
+
+[["{debug_,}assert_{eq,ne}"]]
+defmt = false
+"$left:expr, $right:expr" = "$crate::private::{debug_,}assert_{eq,ne}!($left, $right)"
+"$left:expr, $right:expr, $($arg:tt)+" = "$crate::translate!(std, $crate::private::assert_eq, [$left, $right], $($arg)*)"
+
+
+[[unwrap]]
+defmt = true
+"$e:expr" = "$crate::defmt::unwrap!($e)"
+"$e:expr, $format:literal $(, $arg:tt)*" = "$crate::translate!(defmt, $crate::defmt::unwrap, [$e], $format $(, $arg)*)"
+
+[[unwrap]]
+defmt = false
+alloc = true
+"$e:expr" = "($e).unwrap()"
+"$e:expr, $format:literal" = "($e).expect($format)"
+"$e:expr, $format:literal $(, $arg:tt)*" = "($e).expect(&$crate::translate!(std, $crate::private::format, [], $format $(, $arg)*))"
+
+[[unwrap]]
+defmt = false
+alloc = false
+"$e:expr" = "($e).unwrap()"
+"$e:expr, $format:literal $(, $arg:tt)*" = "($e).expect($format)"
+
+
+[[println]]
+defmt = true
+"" = "$crate::defmt::println!()"
+"$format:literal $(, $arg:tt)*" = "$crate::translate!(defmt, $crate::defmt::println, [], $format, $($arg),*)"
+
+[[println]]
+defmt = false
+std = true
+"" = "$crate::private::println!()"
+"$format:literal $(, $arg:tt)*" = "$crate::translate!(std, $crate::private::println, [], $format, $($arg),*)"
+
+[[println]]
+defmt = false
+std = false
+"" = "()"
+"$format:literal $(, $arg:tt)*" = "()"
+
+
+[["{error,warn,debug,info,trace}"]]
+defmt = true
+"$format:literal $(, $arg:expr)*" = "use $crate::defmt; $crate::translate!(defmt, $crate::defmt::{error,warn,debug,info,trace}, [], $format, $($arg),*)"
+
+[["{error,warn,debug,info,trace}"]]
+log = true
+"$format:literal $(, $arg:expr)*" = "$crate::translate!(std, $crate::log::{error,warn,debug,info,trace}, [], $format, $($arg),*)"
+
+[["{error,warn,debug,info,trace}"]]
+defmt = false
+log = false
+"$format:literal $(, $arg:expr)*" = "()"
+
+
+[[intern]]
+defmt = true
+"$s:literal" = "$crate::defmt::intern!($s)"
+
+[[intern]]
+defmt = false
+"$s:literal" = "$s"

@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = ["loog", "loog-macros"]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["W Etheredge <me@wetheredge.com>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+loog-macros.path = "loog-macros"

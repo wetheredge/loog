@@ -1,0 +1,17 @@
+[package]
+name = "loog"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+defmt = ["dep:defmt"]
+log = ["dep:log"]
+std = ["alloc"]
+alloc = []
+
+[dependencies]
+defmt = { version = "0.3.8", optional = true }
+log = { version = "0.4.22", optional = true }
+loog-macros.workspace = true
