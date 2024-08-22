@@ -8,8 +8,8 @@ macro_rules! dbg {
 #[cfg(all(not(feature = "defmt"), feature = "std"))]
 #[macro_export]
 macro_rules! dbg {
-	() => {{ $crate::private::dbg!() }};
-	($($val:expr),+ $(,)?) => {{ $crate::private::dbg!($($val),+) }};
+	() => {{ ::std::dbg!() }};
+	($($val:expr),+ $(,)?) => {{ ::std::dbg!($($val),+) }};
 }
 
 #[cfg(not(any(feature = "defmt", feature = "std")))]
@@ -30,8 +30,8 @@ macro_rules! debug_assert {
 #[cfg(not(feature = "defmt"))]
 #[macro_export]
 macro_rules! debug_assert {
-	($cond:expr $(,)?) => {{ $crate::private::debug_assert!($cond) }};
-	($cond:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, $crate::private::debug_assert, [$cond], $($arg)+) }};
+	($cond:expr $(,)?) => {{ ::core::debug_assert!($cond) }};
+	($cond:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::debug_assert, [$cond], $($arg)+) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -44,8 +44,8 @@ macro_rules! assert {
 #[cfg(not(feature = "defmt"))]
 #[macro_export]
 macro_rules! assert {
-	($cond:expr $(,)?) => {{ $crate::private::assert!($cond) }};
-	($cond:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, $crate::private::assert, [$cond], $($arg)+) }};
+	($cond:expr $(,)?) => {{ ::core::assert!($cond) }};
+	($cond:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert, [$cond], $($arg)+) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -58,8 +58,8 @@ macro_rules! debug_assert_eq {
 #[cfg(not(feature = "defmt"))]
 #[macro_export]
 macro_rules! debug_assert_eq {
-	($left:expr, $right:expr $(,)?) => {{ $crate::private::debug_assert_eq!($left, $right) }};
-	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, $crate::private::assert_eq, [$left, $right], $($arg)*) }};
+	($left:expr, $right:expr $(,)?) => {{ ::core::debug_assert_eq!($left, $right) }};
+	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -72,8 +72,8 @@ macro_rules! debug_assert_ne {
 #[cfg(not(feature = "defmt"))]
 #[macro_export]
 macro_rules! debug_assert_ne {
-	($left:expr, $right:expr $(,)?) => {{ $crate::private::debug_assert_ne!($left, $right) }};
-	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, $crate::private::assert_eq, [$left, $right], $($arg)*) }};
+	($left:expr, $right:expr $(,)?) => {{ ::core::debug_assert_ne!($left, $right) }};
+	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -86,8 +86,8 @@ macro_rules! assert_eq {
 #[cfg(not(feature = "defmt"))]
 #[macro_export]
 macro_rules! assert_eq {
-	($left:expr, $right:expr $(,)?) => {{ $crate::private::assert_eq!($left, $right) }};
-	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, $crate::private::assert_eq, [$left, $right], $($arg)*) }};
+	($left:expr, $right:expr $(,)?) => {{ ::core::assert_eq!($left, $right) }};
+	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -100,8 +100,8 @@ macro_rules! assert_ne {
 #[cfg(not(feature = "defmt"))]
 #[macro_export]
 macro_rules! assert_ne {
-	($left:expr, $right:expr $(,)?) => {{ $crate::private::assert_ne!($left, $right) }};
-	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, $crate::private::assert_eq, [$left, $right], $($arg)*) }};
+	($left:expr, $right:expr $(,)?) => {{ ::core::assert_ne!($left, $right) }};
+	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -111,12 +111,20 @@ macro_rules! unwrap {
 	($e:expr, $format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(defmt, $crate::defmt::unwrap, [$e], $format $(, $arg)*) }};
 }
 
-#[cfg(all(not(feature = "defmt"), feature = "alloc"))]
+#[cfg(all(not(any(feature = "defmt", feature = "std")), feature = "alloc"))]
 #[macro_export]
 macro_rules! unwrap {
 	($e:expr $(,)?) => {{ ($e).unwrap() }};
 	($e:expr, $format:literal $(,)?) => {{ ($e).expect($format) }};
-	($e:expr, $format:literal $(, $arg:tt)* $(,)?) => {{ ($e).expect(&$crate::translate!(std, $crate::private::format, [], $format $(, $arg)*)) }};
+	($e:expr, $format:literal $(, $arg:tt)* $(,)?) => {{ ($e).expect(&$crate::translate!(std, ::alloc::format, [], $format $(, $arg)*)) }};
+}
+
+#[cfg(all(not(feature = "defmt"), feature = "std"))]
+#[macro_export]
+macro_rules! unwrap {
+	($e:expr $(,)?) => {{ ($e).unwrap() }};
+	($e:expr, $format:literal $(,)?) => {{ ($e).expect($format) }};
+	($e:expr, $format:literal $(, $arg:tt)* $(,)?) => {{ ($e).expect(&$crate::translate!(std, ::std::format, [], $format $(, $arg)*)) }};
 }
 
 #[cfg(not(any(feature = "defmt", feature = "alloc")))]
@@ -140,8 +148,8 @@ macro_rules! println {
 #[cfg(all(not(feature = "defmt"), feature = "std"))]
 #[macro_export]
 macro_rules! println {
-	() => {{ $crate::private::println!() }};
-	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(std, $crate::private::println, [], $format, $($arg),*) }};
+	() => {{ ::std::println!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(std, ::std::println, [], $format, $($arg),*) }};
 }
 
 #[cfg(not(any(feature = "defmt", feature = "std")))]

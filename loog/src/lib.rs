@@ -17,18 +17,6 @@ pub use log;
 #[doc(hidden)]
 pub use loog_macros::translate;
 
-#[doc(hidden)]
-pub mod private {
-    #[cfg(feature = "alloc")]
-    pub use alloc::format;
-    pub use core::{
-        assert, assert_eq, assert_ne, debug_assert, debug_assert_eq, debug_assert_ne, panic, todo,
-        unimplemented, unreachable, write, writeln,
-    };
-    #[cfg(feature = "std")]
-    pub use std::{dbg, println};
-}
-
 #[cfg(feature = "defmt")]
 pub use defmt::{Debug2Format, Display2Format};
 
