@@ -18,6 +18,11 @@ pub use log;
 pub use loog_macros::translate;
 
 #[cfg(feature = "defmt")]
+pub type IStr = defmt::Str;
+#[cfg(not(feature = "defmt"))]
+pub type IStr = &'static str;
+
+#[cfg(feature = "defmt")]
 pub use defmt::{Debug2Format, Display2Format};
 
 #[cfg(not(feature = "defmt"))]
