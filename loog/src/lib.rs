@@ -48,6 +48,17 @@ mod to_format {
     }
 }
 
+// New trait to avoid `this bound is already specified as the supertrait of` errors
+#[cfg(not(feature = "defmt"))]
+pub trait DebugFormat: core::fmt::Debug {}
+#[cfg(not(feature = "defmt"))]
+impl<T: core::fmt::Debug> DebugFormat for T {}
+
+#[cfg(feature = "defmt")]
+pub trait DebugFormat: defmt::Format {}
+#[cfg(feature = "defmt")]
+impl<T: defmt::Format> DebugFormat for T {}
+
 #[macro_export]
 macro_rules! switch {
     ($( $target:ident => $then:expr )+) => {{
