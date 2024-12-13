@@ -81,6 +81,17 @@ std = false
 "$format:literal $(, $arg:tt)*" = "()"
 
 
+[["{panic,todo,unimplemented,unreachable}"]]
+defmt = true
+"" = "$crate::defmt::{macro}!()"
+"$format:literal $(, $arg:tt)*" = "$crate::translate!(defmt, $crate::defmt::{macro}, [], $format, $($arg),*)"
+
+[["{panic,todo,unimplemented,unreachable}"]]
+defmt = false
+"" = "::core::{macro}!()"
+"$format:literal $(, $arg:tt)*" = "$crate::translate!(std, ::core::{macro}, [], $format, $($arg),*)"
+
+
 [["{error,warn,debug,info,trace}"]]
 defmt = true
 "$format:literal $(, $arg:expr)*" = "$crate::translate!(defmt, $crate::defmt::{macro}, [], $format, $($arg),*)"

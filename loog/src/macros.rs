@@ -160,6 +160,62 @@ macro_rules! println {
 
 #[cfg(feature = "defmt")]
 #[macro_export]
+macro_rules! panic {
+	() => {{ #[allow(unused_import)] use $crate::defmt; $crate::defmt::panic!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ #[allow(unused_import)] use $crate::defmt; $crate::translate!(defmt, $crate::defmt::panic, [], $format, $($arg),*) }};
+}
+
+#[cfg(not(feature = "defmt"))]
+#[macro_export]
+macro_rules! panic {
+	() => {{ ::core::panic!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(std, ::core::panic, [], $format, $($arg),*) }};
+}
+
+#[cfg(feature = "defmt")]
+#[macro_export]
+macro_rules! todo {
+	() => {{ #[allow(unused_import)] use $crate::defmt; $crate::defmt::todo!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ #[allow(unused_import)] use $crate::defmt; $crate::translate!(defmt, $crate::defmt::todo, [], $format, $($arg),*) }};
+}
+
+#[cfg(not(feature = "defmt"))]
+#[macro_export]
+macro_rules! todo {
+	() => {{ ::core::todo!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(std, ::core::todo, [], $format, $($arg),*) }};
+}
+
+#[cfg(feature = "defmt")]
+#[macro_export]
+macro_rules! unimplemented {
+	() => {{ #[allow(unused_import)] use $crate::defmt; $crate::defmt::unimplemented!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ #[allow(unused_import)] use $crate::defmt; $crate::translate!(defmt, $crate::defmt::unimplemented, [], $format, $($arg),*) }};
+}
+
+#[cfg(not(feature = "defmt"))]
+#[macro_export]
+macro_rules! unimplemented {
+	() => {{ ::core::unimplemented!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(std, ::core::unimplemented, [], $format, $($arg),*) }};
+}
+
+#[cfg(feature = "defmt")]
+#[macro_export]
+macro_rules! unreachable {
+	() => {{ #[allow(unused_import)] use $crate::defmt; $crate::defmt::unreachable!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ #[allow(unused_import)] use $crate::defmt; $crate::translate!(defmt, $crate::defmt::unreachable, [], $format, $($arg),*) }};
+}
+
+#[cfg(not(feature = "defmt"))]
+#[macro_export]
+macro_rules! unreachable {
+	() => {{ ::core::unreachable!() }};
+	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(std, ::core::unreachable, [], $format, $($arg),*) }};
+}
+
+#[cfg(feature = "defmt")]
+#[macro_export]
 macro_rules! error {
 	($format:literal $(, $arg:expr)* $(,)?) => {{ #[allow(unused_import)] use $crate::defmt; $crate::translate!(defmt, $crate::defmt::error, [], $format, $($arg),*) }};
 }
