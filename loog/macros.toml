@@ -83,7 +83,7 @@ std = false
 
 [["{error,warn,debug,info,trace}"]]
 defmt = true
-"$format:literal $(, $arg:expr)*" = "use $crate::defmt; $crate::translate!(defmt, $crate::defmt::{macro}, [], $format, $($arg),*)"
+"$format:literal $(, $arg:expr)*" = "$crate::translate!(defmt, $crate::defmt::{macro}, [], $format, $($arg),*)"
 
 [["{error,warn,debug,info,trace}"]]
 log = true

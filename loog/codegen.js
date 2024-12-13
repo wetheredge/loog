@@ -49,6 +49,9 @@ for (const [rawName, definitions] of Object.entries(data)) {
 					write(' $(,)?')
 				}
 				write(`) => {{ `)
+				if (defmt) {
+					write('#[allow(unused_import)] use $crate::defmt; ')
+				}
 				write(body.replaceAll('{macro}', name))
 				writeln(' }};')
 			}
