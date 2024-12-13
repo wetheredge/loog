@@ -141,23 +141,18 @@ macro_rules! unwrap {
 #[cfg(feature = "defmt")]
 #[macro_export]
 macro_rules! println {
-	() => {{ $crate::defmt::println!() }};
 	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(defmt, $crate::defmt::println, [], $format, $($arg),*) }};
 }
 
 #[cfg(all(not(feature = "defmt"), feature = "std"))]
 #[macro_export]
 macro_rules! println {
-	() => {{ ::std::println!() }};
 	($format:literal $(, $arg:tt)* $(,)?) => {{ $crate::translate!(std, ::std::println, [], $format, $($arg),*) }};
 }
 
 #[cfg(not(any(feature = "defmt", feature = "std")))]
 #[macro_export]
 macro_rules! println {
-    () => {{
-        ()
-    }};
     ($format:literal $(, $arg:tt)* $(,)?) => {{
         ()
     }};

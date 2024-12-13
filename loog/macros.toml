@@ -68,19 +68,16 @@ alloc = false
 
 [[println]]
 defmt = true
-"" = "$crate::defmt::println!()"
 "$format:literal $(, $arg:tt)*" = "$crate::translate!(defmt, $crate::defmt::println, [], $format, $($arg),*)"
 
 [[println]]
 defmt = false
 std = true
-"" = "::std::println!()"
 "$format:literal $(, $arg:tt)*" = "$crate::translate!(std, ::std::println, [], $format, $($arg),*)"
 
 [[println]]
 defmt = false
 std = false
-"" = "()"
 "$format:literal $(, $arg:tt)*" = "()"
 
 
