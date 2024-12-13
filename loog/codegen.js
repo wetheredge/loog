@@ -49,7 +49,7 @@ for (const [rawName, definitions] of Object.entries(data)) {
 					write(' $(,)?')
 				}
 				write(`) => {{ `)
-				write(body.replaceAll(rawName, name))
+				write(body.replaceAll('{macro}', name))
 				writeln(' }};')
 			}
 

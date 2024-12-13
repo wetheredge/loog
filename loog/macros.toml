@@ -19,24 +19,24 @@ std = false
 
 [["{debug_,}assert"]]
 defmt = true
-"$cond:expr" = "$crate::defmt::{debug_,}assert!($cond)"
-"$cond:expr, $($arg:tt)+" = "$crate::translate!(defmt, $crate::defmt::{debug_,}assert, [$cond], $($arg)+)"
+"$cond:expr" = "$crate::defmt::{macro}!($cond)"
+"$cond:expr, $($arg:tt)+" = "$crate::translate!(defmt, $crate::defmt::{macro}, [$cond], $($arg)+)"
 
 [["{debug_,}assert"]]
 defmt = false
-"$cond:expr" = "::core::{debug_,}assert!($cond)"
-"$cond:expr, $($arg:tt)+" = "$crate::translate!(std, ::core::{debug_,}assert, [$cond], $($arg)+)"
+"$cond:expr" = "::core::{macro}!($cond)"
+"$cond:expr, $($arg:tt)+" = "$crate::translate!(std, ::core::{macro}, [$cond], $($arg)+)"
 
 
 [["{debug_,}assert_{eq,ne}"]]
 defmt = true
-"$left:expr, $right:expr" = "$crate::defmt::{debug_,}assert_{eq,ne}!($left, $right)"
-"$left:expr, $right:expr, $($arg:tt)+" = "$crate::translate!(defmt, $crate::defmt::{debug_,}assert_{eq,ne}, [$left, $right], $($arg)*)"
+"$left:expr, $right:expr" = "$crate::defmt::{macro}!($left, $right)"
+"$left:expr, $right:expr, $($arg:tt)+" = "$crate::translate!(defmt, $crate::defmt::{macro}, [$left, $right], $($arg)*)"
 
 [["{debug_,}assert_{eq,ne}"]]
 defmt = false
-"$left:expr, $right:expr" = "::core::{debug_,}assert_{eq,ne}!($left, $right)"
-"$left:expr, $right:expr, $($arg:tt)+" = "$crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*)"
+"$left:expr, $right:expr" = "::core::{macro}!($left, $right)"
+"$left:expr, $right:expr, $($arg:tt)+" = "$crate::translate!(std, ::core::{macro}, [$left, $right], $($arg)*)"
 
 
 [[unwrap]]
@@ -86,11 +86,11 @@ std = false
 
 [["{error,warn,debug,info,trace}"]]
 defmt = true
-"$format:literal $(, $arg:expr)*" = "use $crate::defmt; $crate::translate!(defmt, $crate::defmt::{error,warn,debug,info,trace}, [], $format, $($arg),*)"
+"$format:literal $(, $arg:expr)*" = "use $crate::defmt; $crate::translate!(defmt, $crate::defmt::{macro}, [], $format, $($arg),*)"
 
 [["{error,warn,debug,info,trace}"]]
 log = true
-"$format:literal $(, $arg:expr)*" = "$crate::translate!(std, $crate::log::{error,warn,debug,info,trace}, [], $format, $($arg),*)"
+"$format:literal $(, $arg:expr)*" = "$crate::translate!(std, $crate::log::{macro}, [], $format, $($arg),*)"
 
 [["{error,warn,debug,info,trace}"]]
 defmt = false

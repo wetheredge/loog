@@ -59,7 +59,7 @@ macro_rules! debug_assert_eq {
 #[macro_export]
 macro_rules! debug_assert_eq {
 	($left:expr, $right:expr $(,)?) => {{ ::core::debug_assert_eq!($left, $right) }};
-	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*) }};
+	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::debug_assert_eq, [$left, $right], $($arg)*) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -73,7 +73,7 @@ macro_rules! debug_assert_ne {
 #[macro_export]
 macro_rules! debug_assert_ne {
 	($left:expr, $right:expr $(,)?) => {{ ::core::debug_assert_ne!($left, $right) }};
-	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*) }};
+	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::debug_assert_ne, [$left, $right], $($arg)*) }};
 }
 
 #[cfg(feature = "defmt")]
@@ -101,7 +101,7 @@ macro_rules! assert_ne {
 #[macro_export]
 macro_rules! assert_ne {
 	($left:expr, $right:expr $(,)?) => {{ ::core::assert_ne!($left, $right) }};
-	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_eq, [$left, $right], $($arg)*) }};
+	($left:expr, $right:expr, $($arg:tt)+ $(,)?) => {{ $crate::translate!(std, ::core::assert_ne, [$left, $right], $($arg)*) }};
 }
 
 #[cfg(feature = "defmt")]
